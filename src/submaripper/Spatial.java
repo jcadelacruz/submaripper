@@ -9,6 +9,7 @@ public class Spatial{
     private boolean isPermeable;
     private ArrayList<Item> inventory;
     private static Spatial user;
+    private static ArrayList<Room> submarine;
     
     public Spatial(int x, int y){
         name = "rock";
@@ -58,6 +59,9 @@ public class Spatial{
     public static Spatial getUser(){
         return user;
     }
+    public static ArrayList<Room> getSubmarine(){
+        return submarine;
+    }
     
     //setters
         //stats
@@ -96,6 +100,9 @@ public class Spatial{
         //static
     public static void setUser(Spatial u){
         user = u;
+    }
+    public static void setSubmarine(ArrayList<Room> s){
+        submarine = s;
     }
         //items
     public void addItem(Item i){

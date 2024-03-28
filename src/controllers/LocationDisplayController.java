@@ -61,7 +61,7 @@ public class LocationDisplayController implements Initializable {
         Button exitBtn = new Button("Exit");
         exitBtn.setOnAction(e -> {
             try{
-                FXMLLoader openFXML = Submaripper.openFXML("Menu", e, this.getClass());
+                FXMLLoader loader = Submaripper.openFXML("Menu", e, this.getClass());
             }
             catch(Exception ex){
                 //
@@ -81,7 +81,7 @@ public class LocationDisplayController implements Initializable {
     }
         //display
     public void updateScreen(){
-        System.out.println("perform updateScreen");
+        //System.out.println("perform updateScreen");
         Location l = currLoc;
         setBackground(l);
         for(Spatial s : l.getContents()){
@@ -109,7 +109,7 @@ public class LocationDisplayController implements Initializable {
         //functionality
     @FXML public void moveShip(KeyEvent e){
         KeyCode keyCode = e.getCode();
-        System.out.println("Key pressed: " + keyCode);
+        //System.out.println("Key pressed: " + keyCode);
         if(keyCode.getName().equals("W")){
             if(allowMoveButtons[0]) commenceMove(0);
         }
@@ -127,7 +127,7 @@ public class LocationDisplayController implements Initializable {
         }
     }
     private void commenceMove(int direction){
-        System.out.println("perform commenceMove, direction: " + direction);
+        //System.out.println("perform commenceMove, direction: " + direction);
         if(checkOpenSpace(direction)){
             //System.out.println(" distance from edge:" + checkDistanceFromEdge(direction));
             int key = checkDistanceFromEdge(direction);
@@ -154,7 +154,7 @@ public class LocationDisplayController implements Initializable {
         updateScreen();
     }
     private int checkDistanceFromEdge(int direction){
-        System.out.print("perform checkDistanceFromEdge: ");
+        //System.out.print("perform checkDistanceFromEdge: ");
         if(direction>3){
             int subtract = (direction)/4;
             direction -= subtract*4;
@@ -175,9 +175,9 @@ public class LocationDisplayController implements Initializable {
                 distance = user.getPosition()[0];//startX + 
                 break;
             default:
-                System.out.println("Direction not found");
+                //System.out.println("Direction not found");
         }
-        System.out.println("  " + distance);
+        //System.out.println("  " + distance);
         return distance;
     }
     private void checkMoveButtonLimits(){
@@ -187,7 +187,7 @@ public class LocationDisplayController implements Initializable {
         }
     }
     private void movePlayerPos(int direction){
-        System.out.println("perform movePlayerPos");
+        //System.out.println("perform movePlayerPos");
         if(direction>3){
             int subtract = (direction)/4;
             direction -= subtract*4;
@@ -240,7 +240,6 @@ public class LocationDisplayController implements Initializable {
         movePlayerPos(direction);
         for(Spatial s : l.getContents()){
             if( (s.getPosition()[0] == user.getPosition()[0]) && (s.getPosition()[1] == user.getPosition()[1]) && (s!=user)){
-                System.out.println(" !!!!!!!!!!!1same positions");
                 if(!s.getIsPermeable()){
                     open = false;
                 }
@@ -261,6 +260,9 @@ public class LocationDisplayController implements Initializable {
             Stage newStage = new Stage();
             newStage.setScene(scene);
             newStage.show();
+            //set submarine display controller functions
+            SubmarineDisplayController sdc = loader.getController();
+            sdc.setLocationDisplayController(this);
             //submarine opened
             submarineOpened = true;
         }
@@ -273,34 +275,34 @@ public class LocationDisplayController implements Initializable {
     }
         //initialize imageviews
     private void setImageViews(){
-        System.out.println("perform setImageViews");
+        //System.out.println("perform setImageViews");
         imageViews = new ArrayList();
         
         locGrid.getColumnConstraints().clear(); // Clear column constraints
         locGrid.getRowConstraints().clear(); // Clear row constraints
         
         for(int c = 0; c<COL; c++){
-            System.out.println(" first for: " + c);
+            //System.out.println(" first for: " + c);
             ArrayList<ImageView> ar = new ArrayList();
             imageViews.add(ar);
             for(int r = 0; r<ROW; r++){
-                System.out.println("  second for: " + r);
+                //System.out.println("  second for: " + r);
                 ImageView iv = (ImageView) getChildByColRowIndex(c, r, locGrid);
                 iv.setPreserveRatio(true);
-                iv.setFitWidth(74); // Set the width you want the image to fit in
-                iv.setFitHeight(74); // Set the height you want the image to fit in
+                iv.setFitWidth(74);
+                iv.setFitHeight(74);
                 imageViews.get(c).add(iv);
             }
-            ColumnConstraints column = new ColumnConstraints(74); // Set the width of each column to 100 pixels
+            ColumnConstraints column = new ColumnConstraints(74); // Set the width of each column to 74 pixels
             locGrid.getColumnConstraints().add(column);
         }
         for(int r = 0; r<ROW; r++){
-            RowConstraints row = new RowConstraints(74); // Set the height of each row to 50 pixels
+            RowConstraints row = new RowConstraints(74); // Set the height of each row to 74 pixels
             locGrid.getRowConstraints().add(row);
         }
     }
     private Node getChildByColRowIndex(int col, int row, GridPane gridPane){
-        System.out.println("perform getChildByColRowIndex");
+        //System.out.println("perform getChildByColRowIndex");
         Node result = null;
 
         for (Node node : gridPane.getChildren()) {
@@ -316,7 +318,7 @@ public class LocationDisplayController implements Initializable {
             }
         }
 
-        System.out.println(result);
+        //System.out.println(result);
         return result;
     }
     
@@ -328,7 +330,7 @@ public class LocationDisplayController implements Initializable {
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        System.out.println("initialize location display controller");
+        //System.out.println("initialize location display controller");
         //initialize
         startX = 0;
         startY = 0;

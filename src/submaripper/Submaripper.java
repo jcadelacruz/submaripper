@@ -5,6 +5,8 @@
 package submaripper;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import javafx.application.Application;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
@@ -26,9 +28,18 @@ public class Submaripper extends Application {
             //Spatial l1s1 = new Spatial("Small Fish", "smallFish.png", 2, 1, 2, true, 4, 3);
             l1.add(s(0,0), s(0,1), s(0,2), s(1,1), s(0,3), s(0, 4), s(1, 3), s(1, 4), s(2, 4), s(4,4), s(7,0), s(0,5));//rocks
         
+        Room r1 = new Room("Navigation", "nav.png", 0, "NAVIGATION", 4, 3, false);
+        Room r2 = new Room("Weapons", "weapons.png", 2, "WEAPONS", 6, 3, false);
+        Room r3 = new Room("Health Station", "hs.png", -1, "HEALTH STATION", 4, 7, false);
+        ArrayList<Room> submarine = new ArrayList<>();
+        Collections.addAll(submarine, r1, r2, r3);
+            
         //user
         Spatial user = new Spatial("Submarine", "submarine.png", 10, 1, 5, false, 2, 2);
         Spatial.setUser(user);
+        Room player = new Room("Player", "player.png", 0, " ", 5, 5, false);
+        Room.setUser(player);
+        Spatial.setSubmarine(submarine);
             
         //open menu
         Parent root = FXMLLoader.load(getClass().getResource("/displays/MenuDisplay.fxml"));
