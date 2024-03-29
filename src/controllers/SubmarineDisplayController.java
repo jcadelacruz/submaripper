@@ -4,10 +4,13 @@
  */
 package controllers;
 
+import controllers.rooms.*;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -34,6 +37,9 @@ public class SubmarineDisplayController implements Initializable {
     private ArrayList<Room> rooms;
     private Room user;
     private boolean[] allowMoveButtons = new boolean[4];//in order: north, east, south, west
+    private String keyPressed = "";
+    private int keyCount;
+    private boolean roomOpened = false;
 
     //main portion
         //set location
@@ -67,26 +73,29 @@ public class SubmarineDisplayController implements Initializable {
     @FXML public void moveUser(KeyEvent e){
         KeyCode keyCode = e.getCode();
         System.out.println(" Key pressed: " + keyCode);
-        if(keyCode.getName().equals("W")){
-            commenceMove(0);
+        switch(keyCode.getName()){
+            case "W":
+                commenceMove(0);
+                break;
+            case "D":
+                commenceMove(1);
+                break;
+            case "S":
+                commenceMove(2);
+                break;
+            case "A":
+                commenceMove(3);
+                break;
+            default:
+                setKeyPressed(keyCode.getName());
+                checkNearbyRooms();
         }
-        if(keyCode.getName().equals("D")){
-            commenceMove(1);
-        }
-        if(keyCode.getName().equals("S")){
-            commenceMove(2);
-        }
-        if(keyCode.getName().equals("A")){
-            commenceMove(3);
-        }
-        checkKeyEvent(keyCode);
     }
-    private void checkKeyEvent(KeyCode k){
-        Room u = user;
-        int[] pos = u.getPosition();
-        if(k.getName().equals("T")){// && ( (pos[0]==room.getPosition()[0]) && (pos[1]==room.getPosition()[1]) )){
-            //open room
-        }
+    private void setKeyPressed(String s){
+        keyPressed = s;
+    }
+    private String getKeyPressed(){
+        return keyPressed;
     }
     private void commenceMove(int direction){
         System.out.println("perform commenceMove, direction: " + direction);
@@ -97,7 +106,74 @@ public class SubmarineDisplayController implements Initializable {
         else{
             //not open space
         }
+        checkNearbyRooms();
         updateScreen();
+    }
+    private void checkNearbyRooms(){
+        ArrayList<Room> rs = this.rooms;
+        Room u = this.user;
+        
+        Room roomNearby = u;
+        for(Room r : rs){
+            int x = r.getPosition()[0], y = r.getPosition()[1];
+            int ux = user.getPosition()[0], uy = user.getPosition()[1];
+            if( (x==ux) && ( (y==(uy+1)) || (y==(uy-1))) && (!r.getIsPermeable())){
+                roomNearby = r;
+            }
+            else if( (y==uy) && ( (x==(ux+1)) || (x==(ux-1))) && (!r.getIsPermeable()) ){
+                roomNearby = r;
+            }
+        }
+        
+        if(roomNearby!=u) attemptOpenRoom(roomNearby);
+        else keyCount = 0;
+    }
+    private void attemptOpenRoom(Room r){
+        System.out.println("perform attemptOpenRoom");
+        Lock l = r.getLock();
+        switch(l.getType()){
+            case "TAP_B":
+                if(getKeyPressed().equals("B")) keyCount++;
+                if(keyCount==l.getAmount()) openRoom(r);
+                break;
+            case "ALTERNATE_JK":
+                //get isEven of keyCount
+                boolean isEven = true;
+                int i = keyCount/2;
+                if((keyCount-(i*2))==1) isEven = false;
+                //up the count
+                if(isEven){
+                    if(getKeyPressed().equals("J")) keyCount++;
+                    else keyCount = 0;
+                }
+                if(!isEven){
+                    if(getKeyPressed().equals("K")) keyCount++;
+                    else keyCount = 0;
+                }
+                //check if reached
+                if(keyCount==l.getAmount()*2) openRoom(r);
+                break;
+            default:
+                System.out.println("type not found");
+        }
+    }
+    private void openRoom(Room r){
+        System.out.println("perform openRoom");
+        try{
+            roomOpened = true;
+            FXMLLoader loader = Submaripper.openFXML("rooms/"+r.getFXMLFileName(), subGrid, this.getClass());
+            setThisAsSubmarineDisplayController(loader.getController());
+        }
+        catch(IOException e){
+            System.out.println("file not found");
+        }
+    }
+    private void setThisAsSubmarineDisplayController(NavigationDisplayController ndc){
+        ndc.setSubmarineDisplayController(this);
+        ndc.setLocationDisplayController(ldc);
+    }
+    public void setRoomOpened(boolean b){
+        roomOpened = b;
     }
     private void movePlayerPos(int direction){
         //System.out.println("perform movePlayerPos");
@@ -106,9 +182,6 @@ public class SubmarineDisplayController implements Initializable {
             direction -= subtract*4;
         }
         int[] pos = user.getPosition();
-        /*System.out.println(" user pos before: " + user.getPosition()[0] + ", " + user.getPosition()[1]);
-        System.out.println(" pos before: " + pos[0] + ", " + pos[1]);
-        System.out.println(" direction: " + direction);*/
         switch(direction){
             case 0:
                 user.setY(pos[1]-1);
@@ -123,12 +196,9 @@ public class SubmarineDisplayController implements Initializable {
                 user.setX(pos[0]-1);
                 break;
         }
-        //System.out.println(" user pos after: " + user.getPosition()[0] + ", " + user.getPosition()[1]);
     }
     private boolean checkOpenSpace(int direction){
-        boolean open = false;
-        //Room l = user;
-        
+        boolean open = false;        
         if(checkDistanceFromEdge(direction)<=0) return false;
         
         movePlayerPos(direction);
@@ -245,7 +315,7 @@ public class SubmarineDisplayController implements Initializable {
         COL = 10;
         ROW = 10;
             //submarine
-        rooms = Spatial.getSubmarine();
+        rooms = Room.getSubmarine();
         rooms.add(Room.getUser());
         user = Room.getUser();
             //iv

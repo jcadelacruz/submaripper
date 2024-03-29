@@ -23,23 +23,32 @@ public class Submaripper extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        //initialize
+        //INITIALIZE
+            //location
         Location l1 = new Location("Shallow Waters", "shallowWaters.png");
             //Spatial l1s1 = new Spatial("Small Fish", "smallFish.png", 2, 1, 2, true, 4, 3);
             l1.add(s(0,0), s(0,1), s(0,2), s(1,1), s(0,3), s(0, 4), s(1, 3), s(1, 4), s(2, 4), s(4,4), s(7,0), s(0,5));//rocks
         
-        Room r1 = new Room("Navigation", "nav.png", 0, "NAVIGATION", 4, 3, false);
-        Room r2 = new Room("Weapons", "weapons.png", 2, "WEAPONS", 6, 3, false);
-        Room r3 = new Room("Health Station", "hs.png", -1, "HEALTH STATION", 4, 7, false);
+            //locks
+        Lock tapBThrice = new Lock("TAP_B", 3);
+        Lock tapBTwice = new Lock("TAP_B", 2);
+        Lock tapBOnce = new Lock("TAP_B", 1);
+        Lock alternateJKTwice = new Lock("ALTERNATE_JK", 2);
+        Lock placeholder = new Lock("", -1);
+            
+            //rooms
+        Room r1 = new Room("Navigation", "nav.png", "Navigation", 0, "NAVIGATION", 4, 3, false, tapBTwice);
+        Room r2 = new Room("Weapons", "weapons.png", "Weapons", 2, "WEAPONS", 6, 3, false, alternateJKTwice);
+        Room r3 = new Room("Health Station", "hs.png", "HealthStation", -1, "HEALTH STATION", 4, 7, false, tapBOnce);
         ArrayList<Room> submarine = new ArrayList<>();
         Collections.addAll(submarine, r1, r2, r3, r(4,4), r(4,5), r(6,4), r(6,5), r(5,5), r(4,6));
             
         //user
         Spatial user = new Spatial("Submarine", "submarine.png", 10, 1, 5, false, 2, 2);
         Spatial.setUser(user);
-        Room player = new Room("Player", "player.png", 0, " ", 5, 5, false);
+        Room player = new Room("Player", "player.png", " ", 0, " ", 5, 5, false, placeholder);
         Room.setUser(player);
-        Spatial.setSubmarine(submarine);
+        Room.setSubmarine(submarine);
             
         //open menu
         Parent root = FXMLLoader.load(getClass().getResource("/displays/MenuDisplay.fxml"));
@@ -63,6 +72,26 @@ public class Submaripper extends Application {
             //get current display
             Node node = (Node) e.getSource();
             Scene currentScene = node.getScene();
+            Stage currentStage = (Stage) currentScene.getWindow();
+            //get new display
+            loader = new FXMLLoader(className.getResource("/displays/" + name + "Display.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            //switch displays
+            currentStage.hide();
+            currentStage.setScene(scene);
+            currentStage.show();
+        }
+        catch(IOException exception){
+            //error
+        }
+        return loader;
+    }
+    public static FXMLLoader openFXML(String name, Node n, Class className) throws IOException{
+        FXMLLoader loader = null;
+        try{
+            //get current display
+            Scene currentScene = n.getScene();
             Stage currentStage = (Stage) currentScene.getWindow();
             //get new display
             loader = new FXMLLoader(className.getResource("/displays/" + name + "Display.fxml"));

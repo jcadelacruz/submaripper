@@ -41,7 +41,7 @@ public class LocationDisplayController implements Initializable {
     @FXML private VBox optionsVBox;
     @FXML private GridPane locGrid;
     private Location currLoc;
-    private int ROW=5, COL=5, startX, startY;
+    private int ROW=5, COL=5, startX, startY, direction = 0;
     private ArrayList<ArrayList<ImageView>> imageViews;
     private Spatial user;
     private boolean submarineOpened;
@@ -110,17 +110,8 @@ public class LocationDisplayController implements Initializable {
     @FXML public void moveShip(KeyEvent e){
         KeyCode keyCode = e.getCode();
         System.out.println("Key pressed: " + keyCode);
-        if(keyCode.getName().equals("W")){
-            if(allowMoveButtons[0]) commenceMove(0);
-        }
-        if(keyCode.getName().equals("D")){
-            if(allowMoveButtons[1]) commenceMove(1);
-        }
-        if(keyCode.getName().equals("S")){
-            if(allowMoveButtons[2]) commenceMove(2);
-        }
-        if(keyCode.getName().equals("A")){
-            if(allowMoveButtons[3]) commenceMove(3);
+        if(keyCode.equals(KeyCode.W)){
+            if(allowMoveButtons[direction]) commenceMove(direction);
         }
         if(keyCode.getName().equals("E")){
             if(!submarineOpened) openSubmarine();

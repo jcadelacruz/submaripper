@@ -3,17 +3,18 @@ package submaripper;
 import java.util.ArrayList;
 
 public class Room {
-    private static ArrayList<ArrayList<Room>> submarine;
-    private static int[] userPos;
+    private static ArrayList<Room> submarine;
     private static ArrayList<ArrayList<Room>> setUps;
-    private String name, imgFileName, function;
+    private static Room user;
+    private String name, imgFileName, fxmlFileName, function;
     private int hp, maxHP, sVal, x, y;//sVal will be the special value, ex for turrets it will be damage, for health station it will be health added
     private boolean isPermeable;
-    private static Room user;
+    private ArrayList<Lock> locks = new ArrayList<>();
     
-    public Room(String n, String ifn, int s, String f, int x, int y, boolean p){
+    public Room(String n, String ifn, String ffn, int s, String f, int x, int y, boolean p, Lock l){
         name = n;
         imgFileName = ifn;
+        fxmlFileName = ffn;
         hp = 10;
         maxHP = 10;
         sVal = s;
@@ -21,6 +22,7 @@ public class Room {
         this.x = x;
         this.y = y;
         isPermeable = p;
+        locks.add(l);
     }
     public Room(int x, int y){//make walkable floor
         name = "floor";
@@ -42,6 +44,9 @@ public class Room {
     public String getImgFileName(){
         return imgFileName;
     }
+    public String getFXMLFileName(){
+        return fxmlFileName;
+    }
     public int getHP(){
         return hp;
     }
@@ -62,6 +67,9 @@ public class Room {
     }
     public static Room getUser() {
         return user;
+    }
+    public static ArrayList<Room> getSubmarine(){
+        return submarine;
     }
     
     //setters
@@ -90,11 +98,18 @@ public class Room {
     public static void setUser(Room u) {
         user = u;
     }
+    public static void setSubmarine(ArrayList<Room> s){
+        submarine = s;
+    }
         //position
     public void setX(int i) {
         this.x = i;
     }
     public void setY(int i) {
         this.y = i;
+    }
+        //locks
+    public Lock getLock(){
+        return locks.get(0);
     }
 }
