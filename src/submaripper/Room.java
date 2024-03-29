@@ -22,6 +22,17 @@ public class Room {
         this.y = y;
         isPermeable = p;
     }
+    public Room(int x, int y){//make walkable floor
+        name = "floor";
+        imgFileName = "floor.png";
+        hp = 10;
+        maxHP = 10;
+        sVal = -1;
+        function = " ";
+        this.x = x;
+        this.y = y;
+        isPermeable = true;
+    }
     
     //getters
         //stats
@@ -81,9 +92,9 @@ public class Room {
     }
         //position
     public void setX(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.x = i;
     }
     public void setY(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.y = i;
     }
 }

@@ -18,9 +18,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
-import submaripper.Location;
-import submaripper.Room;
-import submaripper.Spatial;
+import submaripper.*;
 
 /**
  * FXML Controller class
@@ -68,18 +66,18 @@ public class SubmarineDisplayController implements Initializable {
         //functionality
     @FXML public void moveUser(KeyEvent e){
         KeyCode keyCode = e.getCode();
-        //System.out.println("Key pressed: " + keyCode);
+        System.out.println(" Key pressed: " + keyCode);
         if(keyCode.getName().equals("W")){
-            if(allowMoveButtons[0]) commenceMove(0);
+            commenceMove(0);
         }
         if(keyCode.getName().equals("D")){
-            if(allowMoveButtons[1]) commenceMove(1);
+            commenceMove(1);
         }
         if(keyCode.getName().equals("S")){
-            if(allowMoveButtons[2]) commenceMove(2);
+            commenceMove(2);
         }
         if(keyCode.getName().equals("A")){
-            if(allowMoveButtons[3]) commenceMove(3);
+            commenceMove(3);
         }
         checkKeyEvent(keyCode);
     }
@@ -91,7 +89,7 @@ public class SubmarineDisplayController implements Initializable {
         }
     }
     private void commenceMove(int direction){
-        //System.out.println("perform commenceMove, direction: " + direction);
+        System.out.println("perform commenceMove, direction: " + direction);
         if(checkOpenSpace(direction)){
             //System.out.println(" distance from edge:" + checkDistanceFromEdge(direction));
             movePlayerPos(direction);
@@ -100,33 +98,6 @@ public class SubmarineDisplayController implements Initializable {
             //not open space
         }
         updateScreen();
-    }
-    private int checkDistanceFromEdge(int direction){
-        //System.out.print("perform checkDistanceFromEdge: ");
-        if(direction>3){
-            int subtract = (direction)/4;
-            direction -= subtract*4;
-        }
-        //System.out.println(" direction: "+ direction);
-        int distance = 0;
-        switch(direction){
-            case 0://north
-                distance = user.getPosition()[1];
-                break;
-            case 1://east
-                distance = (COL-1) - (user.getPosition()[0]);
-                break;
-            case 2://south
-                distance = (ROW-1) - (user.getPosition()[1]);
-                break;
-            case 3://west
-                distance = user.getPosition()[0];
-                break;
-            default:
-                //System.out.println("Direction not found");
-        }
-        //System.out.println("  " + distance);
-        return distance;
     }
     private void movePlayerPos(int direction){
         //System.out.println("perform movePlayerPos");
@@ -155,7 +126,7 @@ public class SubmarineDisplayController implements Initializable {
         //System.out.println(" user pos after: " + user.getPosition()[0] + ", " + user.getPosition()[1]);
     }
     private boolean checkOpenSpace(int direction){
-        boolean open = true;
+        boolean open = false;
         //Room l = user;
         
         if(checkDistanceFromEdge(direction)<=0) return false;
@@ -163,14 +134,41 @@ public class SubmarineDisplayController implements Initializable {
         movePlayerPos(direction);
         for(Room s : rooms){
             if( (s.getPosition()[0] == user.getPosition()[0]) && (s.getPosition()[1] == user.getPosition()[1]) && (s!=user)){
-                if(!s.getIsPermeable()){
-                    open = false;
+                if(s.getIsPermeable()){
+                    open = true;
                 }
             }
         }
         movePlayerPos(direction+2);
         
         return open;
+    }
+    private int checkDistanceFromEdge(int direction){
+        System.out.print("perform checkDistanceFromEdge: ");
+        if(direction>3){
+            int subtract = (direction)/4;
+            direction -= subtract*4;
+        }
+        //System.out.println(" direction: "+ direction);
+        int distance = 0;
+        switch(direction){
+            case 0://north
+                distance = user.getPosition()[1];
+                break;
+            case 1://east
+                distance = (COL-1) - (user.getPosition()[0]);
+                break;
+            case 2://south
+                distance = (ROW-1) - (user.getPosition()[1]);
+                break;
+            case 3://west
+                distance = user.getPosition()[0];
+                break;
+            default:
+                //System.out.println("Direction not found");
+        }
+        //System.out.println("  " + distance);
+        return distance;
     }
     
     //initialize imageviews
@@ -227,23 +225,34 @@ public class SubmarineDisplayController implements Initializable {
             System.out.println("Close sd");
             ldc.setSubmarineOpened(false);
         });
+        subGrid.getScene().setOnKeyPressed(e -> {
+            moveUser(e);
+        });
     }
     public void setLocationDisplayController(LocationDisplayController l){
         ldc = l;
         setCloseFunction();
     }
+    public void close(){
+        Stage currentStage = (Stage) subGrid.getScene().getWindow();
+        currentStage.hide();
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        System.out.println("initialize submarine display controller");
         //initialize
             //numbers
         COL = 10;
         ROW = 10;
+            //submarine
         rooms = Spatial.getSubmarine();
         rooms.add(Room.getUser());
+        user = Room.getUser();
             //iv
         setImageViews();
         
         updateScreen();
+        System.out.println("done initializing submarine display controller");
     }    
     
 }

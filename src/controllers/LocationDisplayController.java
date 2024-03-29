@@ -109,7 +109,7 @@ public class LocationDisplayController implements Initializable {
         //functionality
     @FXML public void moveShip(KeyEvent e){
         KeyCode keyCode = e.getCode();
-        //System.out.println("Key pressed: " + keyCode);
+        System.out.println("Key pressed: " + keyCode);
         if(keyCode.getName().equals("W")){
             if(allowMoveButtons[0]) commenceMove(0);
         }
@@ -263,6 +263,8 @@ public class LocationDisplayController implements Initializable {
             //set submarine display controller functions
             SubmarineDisplayController sdc = loader.getController();
             sdc.setLocationDisplayController(this);
+                //set synchro closed
+            setCloseFunction(sdc);
             //submarine opened
             submarineOpened = true;
         }
@@ -272,6 +274,14 @@ public class LocationDisplayController implements Initializable {
     }
     public void setSubmarineOpened(boolean opened){
         submarineOpened = opened;
+    }
+                //synchronized close
+    private void setCloseFunction(SubmarineDisplayController sdc){
+        Stage currentStage = (Stage) locGrid.getScene().getWindow();
+        //setting on close event
+        currentStage.setOnCloseRequest(event -> {
+            sdc.close();
+        });
     }
         //initialize imageviews
     private void setImageViews(){

@@ -32,7 +32,7 @@ public class Submaripper extends Application {
         Room r2 = new Room("Weapons", "weapons.png", 2, "WEAPONS", 6, 3, false);
         Room r3 = new Room("Health Station", "hs.png", -1, "HEALTH STATION", 4, 7, false);
         ArrayList<Room> submarine = new ArrayList<>();
-        Collections.addAll(submarine, r1, r2, r3);
+        Collections.addAll(submarine, r1, r2, r3, r(4,4), r(4,5), r(6,4), r(6,5), r(5,5), r(4,6));
             
         //user
         Spatial user = new Spatial("Submarine", "submarine.png", 10, 1, 5, false, 2, 2);
@@ -52,6 +52,10 @@ public class Submaripper extends Application {
     public Spatial s(int x, int y){//make impermeable rock
         Spatial rock = new Spatial(x, y);
         return rock;
+    }
+    public Room r(int x, int y){//make permeable floor
+        Room floor = new Room(x, y);
+        return floor;
     }
     public static FXMLLoader openFXML(String name, Event e, Class className) throws IOException{
         FXMLLoader loader = null;
