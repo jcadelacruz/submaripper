@@ -3,12 +3,15 @@ package controllers.rooms;
 import controllers.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.effect.ColorInput;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
@@ -19,9 +22,15 @@ import javafx.stage.Stage;
 public class NavigationDisplayController extends RoomDisplayController implements Initializable {
 
     @FXML private Button northBtn, westBtn, southBtn, eastBtn;
+    ArrayList<Button> buttonList = new ArrayList<>();
 
-    @FXML private void setDirection(ActionEvent event) {
+    @FXML private void setDirection(Event event) {
         Button b = (Button) event.getSource();
+        for(Button i : buttonList){
+            i.setEffect(null);
+        }
+        ColorInput ce = new ColorInput(0, 0, 60, 60, Color.LIGHTBLUE);
+        b.setEffect(ce);
         int d = 0;
         if(b==northBtn) d = 0;
         if(b==eastBtn) d = 1;
@@ -54,6 +63,10 @@ public class NavigationDisplayController extends RoomDisplayController implement
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         addToActiveRooms(this);
+        buttonList.add(northBtn);
+        buttonList.add(westBtn);
+        buttonList.add(southBtn);
+        buttonList.add(eastBtn);
     }
     
 }

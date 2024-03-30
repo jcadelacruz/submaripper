@@ -19,28 +19,28 @@
       </Text>
       <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="180.0">
          <left>
-            <Button fx:id="westBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setDirection" prefHeight="60.0" prefWidth="60.0" text="W" BorderPane.alignment="CENTER">
+            <Button fx:id="westBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setDirection" onMouseEntered="#setDirection" prefHeight="60.0" prefWidth="60.0" text="W" BorderPane.alignment="CENTER">
                <font>
                   <Font size="22.0" />
                </font>
             </Button>
          </left>
          <top>
-            <Button fx:id="northBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setDirection" prefHeight="60.0" prefWidth="60.0" text="N" BorderPane.alignment="CENTER">
+            <Button fx:id="northBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setDirection" onMouseEntered="#setDirection" prefHeight="60.0" prefWidth="60.0" text="N" BorderPane.alignment="CENTER">
                <font>
                   <Font size="22.0" />
                </font>
             </Button>
          </top>
          <bottom>
-            <Button fx:id="southBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setDirection" prefHeight="60.0" prefWidth="60.0" text="S" BorderPane.alignment="CENTER">
+            <Button fx:id="southBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setDirection" onMouseEntered="#setDirection" prefHeight="60.0" prefWidth="60.0" text="S" BorderPane.alignment="CENTER">
                <font>
                   <Font size="22.0" />
                </font>
             </Button>
          </bottom>
          <right>
-            <Button fx:id="eastBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setDirection" prefHeight="60.0" prefWidth="60.0" text="E" BorderPane.alignment="CENTER">
+            <Button fx:id="eastBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setDirection" onMouseEntered="#setDirection" prefHeight="60.0" prefWidth="60.0" text="E" BorderPane.alignment="CENTER">
                <font>
                   <Font size="22.0" />
                </font>
