@@ -111,7 +111,7 @@ public class LocationDisplayController implements Initializable {
     @FXML public void moveShip(KeyEvent e){
         KeyCode keyCode = e.getCode();
         System.out.println("Key pressed: " + keyCode);
-        if(keyCode.equals(KeyCode.W)){
+        if(keyCode.equals(KeyCode.ENTER)){
             if(allowMoveButtons[direction]) commenceMove(direction);
         }
         if(keyCode.getName().equals("E")){

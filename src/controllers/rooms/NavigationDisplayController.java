@@ -43,7 +43,7 @@ public class NavigationDisplayController extends RoomDisplayController implement
     }
     public void setOnKeyPressedMoveLocation(LocationDisplayController a){
         northBtn.getScene().setOnKeyPressed(e -> {
-            if(e.getCode()==KeyCode.W)ldc.moveShip(e);
+            if(e.getCode()==KeyCode.ENTER)ldc.moveShip(e);
         });
     }
     public void close(){

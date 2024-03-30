@@ -8,7 +8,6 @@ public class Lock {
     private String type, instructions;
     private int amount;
     
-    public Lock(){}
     public Lock(String t, int a){
         type = t;
         amount = a;

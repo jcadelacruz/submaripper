@@ -37,17 +37,20 @@ public class Submaripper extends Application {
         Lock placeholder = new Lock("", -1);
             
             //rooms
-        Room r1 = new Room("Navigation", "nav.png", "Navigation", 0, "NAVIGATION", 4, 3, false, tapBTwice);
-        Room r2 = new Room("Weapons", "weapons.png", "Weapons", 2, "WEAPONS", 6, 3, false, alternateJKTwice);
-        Room r3 = new Room("Health Station", "hs.png", "HealthStation", -1, "HEALTH STATION", 4, 7, false, tapBOnce);
-        ArrayList<Room> submarine = new ArrayList<>();
-        Collections.addAll(submarine, r1, r2, r3, r(4,4), r(4,5), r(6,4), r(6,5), r(5,5), r(4,6));
+        Room r1 = new Room("Navigation", "nav.png", "Navigation", 4, 3, false, tapBTwice);
+        Room r2 = new Room("Weapons", "weapons.png", "Weapons", 6, 3, false, alternateJKTwice);
+        Room r3 = new Room("Health Station", "hs.png", "HealthStation", 4, 7, false, tapBOnce);
             
         //user
-        Spatial user = new Spatial("Submarine", "submarine.png", 10, 1, 5, false, 2, 2);
+            //spatial
+        Spatial user = new Spatial("Submarine", "submarine.png", 10, 1, 1, 1, false, 5, 2, 2);
         Spatial.setUser(user);
-        Room player = new Room("Player", "player.png", " ", 0, " ", 5, 5, false, placeholder);
+            //room
+        Room player = new Room("Player", "player.png", " ", 5, 5, false, placeholder);
         Room.setUser(player);
+            //user's submarine (set of rooms)
+        ArrayList<Room> submarine = new ArrayList<>();
+        Collections.addAll(submarine, r1, r2, r3, r(4,4), r(4,5), r(6,4), r(6,5), r(5,5), r(4,6));
         Room.setSubmarine(submarine);
             
         //open menu
@@ -58,11 +61,11 @@ public class Submaripper extends Application {
         stage.setScene(scene);
         stage.show();
     }
-    public Spatial s(int x, int y){//make impermeable rock
+    public Spatial s(int x, int y){//make impermeable rock in map
         Spatial rock = new Spatial(x, y);
         return rock;
     }
-    public Room r(int x, int y){//make permeable floor
+    public Room r(int x, int y){//make permeable floor in rooms
         Room floor = new Room(x, y);
         return floor;
     }

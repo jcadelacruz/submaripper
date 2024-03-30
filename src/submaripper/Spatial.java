@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class Spatial{
     private String name, imgFileName;
-    private int hp, maxHP, atk, money, x, y;
+    private int hp, maxHP, atk, speed, regenRate, money, x, y;
     private boolean isPermeable;
     private ArrayList<Item> inventory;
     private static Spatial user;
@@ -18,12 +18,14 @@ public class Spatial{
         isPermeable = false;
         inventory = new ArrayList<>();
     }
-    public Spatial(String n, String ifn, int h, int a, int m, boolean p, int x, int y){
+    public Spatial(String n, String ifn, int h, int a, int s, int r, boolean p, int m, int x, int y){
         name = n;
         imgFileName = ifn;
         hp = h;
         maxHP = h;
         atk = a;
+        speed = s;
+        regenRate = r;
         money = m;
         this.x = x;
         this.y = y;
