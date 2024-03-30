@@ -33,7 +33,7 @@ public class Submaripper extends Application {
         Lock tapBThrice = new Lock("TAP_B", 3);
         Lock tapBTwice = new Lock("TAP_B", 2);
         Lock tapBOnce = new Lock("TAP_B", 1);
-        Lock alternateJKTwice = new Lock("ALTERNATE_JK", 2);
+        Lock alternateJKTwice = new Lock("ALTERNATE_JK", 4);
         Lock placeholder = new Lock("", -1);
             
             //rooms

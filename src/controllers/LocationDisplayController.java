@@ -247,6 +247,8 @@ public class LocationDisplayController implements Initializable {
             //submarine
     public void openSubmarine(){
         try{
+            //close active rooms
+            RoomDisplayController.closeActiveRooms();
             //get new display
             FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/displays/SubmarineDisplay.fxml"));
             Parent root = loader.load();

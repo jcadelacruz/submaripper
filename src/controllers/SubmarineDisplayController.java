@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -20,6 +21,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import submaripper.*;
 
@@ -31,6 +33,8 @@ import submaripper.*;
 public class SubmarineDisplayController implements Initializable {
 
     @FXML private GridPane subGrid;
+    @FXML private ProgressIndicator openLockProgress;
+    @FXML private Text openLockInstructions;
     private int COL, ROW;
     private ArrayList<ArrayList<ImageView>> imageViews;
     private LocationDisplayController ldc;
@@ -126,7 +130,11 @@ public class SubmarineDisplayController implements Initializable {
         }
         
         if(roomNearby!=u) attemptOpenRoom(roomNearby);
-        else keyCount = 0;
+        else{
+            keyCount = 0;
+            setKeyPressed("not");
+            System.out.println("KeyCOunt: " + keyCount);
+        }
     }
     private void attemptOpenRoom(Room r){
         System.out.println("perform attemptOpenRoom");
@@ -151,11 +159,19 @@ public class SubmarineDisplayController implements Initializable {
                     else keyCount = 0;
                 }
                 //check if reached
-                if(keyCount==l.getAmount()*2) openRoom(r);
+                if(keyCount==l.getAmount()) openRoom(r);
                 break;
             default:
                 System.out.println("type not found");
         }
+        displayOpenLockRequirements(l);
+    }
+    private void displayOpenLockRequirements(Lock l){
+        openLockInstructions.setText(l.getInstructions());
+        int a = l.getAmount();
+        int k = keyCount;
+        double progress = (double) k/a;
+        openLockProgress.setProgress(progress);
     }
     private void openRoom(Room r){
         System.out.println("perform openRoom");

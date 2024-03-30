@@ -32,4 +32,9 @@ public abstract class RoomDisplayController {
         ldc = l;
         setCloseFunction();
     }
+    public static void closeActiveRooms(){
+        for(RoomDisplayController r : activeRooms){
+            r.close();
+        }
+    }
 }
