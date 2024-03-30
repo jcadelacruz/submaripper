@@ -39,7 +39,7 @@ public class SubmarineDisplayController implements Initializable {
     private boolean[] allowMoveButtons = new boolean[4];//in order: north, east, south, west
     private String keyPressed = "";
     private int keyCount;
-    private boolean roomOpened = false;
+    private static boolean roomOpened = false;
 
     //main portion
         //set location
@@ -162,18 +162,32 @@ public class SubmarineDisplayController implements Initializable {
         try{
             roomOpened = true;
             FXMLLoader loader = Submaripper.openFXML("rooms/"+r.getFXMLFileName(), subGrid, this.getClass());
-            setThisAsSubmarineDisplayController(loader.getController());
+            ldc.setSubmarineOpened(false);
+            RoomDisplayController rdc = loader.getController();
+            ldc.setCloseFunction(rdc);
+            rdc.setSubmarineAndLocationDisplayControllers(this, ldc);
         }
         catch(IOException e){
             System.out.println("file not found");
         }
     }
-    private void setThisAsSubmarineDisplayController(NavigationDisplayController ndc){
-        ndc.setSubmarineDisplayController(this);
-        ndc.setLocationDisplayController(ldc);
-    }
     public void setRoomOpened(boolean b){
         roomOpened = b;
+    }
+    public static boolean getRoomOpened(){
+        return roomOpened;
+    }
+    public void checkRoomOpened(){
+        if(roomOpened){
+            ArrayList<RoomDisplayController> rdc = RoomDisplayController.getActiveRooms();
+            try{
+                rdc.get(0).close();
+            }
+            catch(NullPointerException e){
+                //shouldnt be thrown
+            }
+        }
+        roomOpened = false;
     }
     private void movePlayerPos(int direction){
         //System.out.println("perform movePlayerPos");
@@ -310,6 +324,8 @@ public class SubmarineDisplayController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         System.out.println("initialize submarine display controller");
+        //check if room is opened
+            checkRoomOpened();
         //initialize
             //numbers
         COL = 10;

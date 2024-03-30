@@ -4,6 +4,7 @@
  */
 package controllers;
 
+import controllers.rooms.RoomDisplayController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -116,6 +117,9 @@ public class LocationDisplayController implements Initializable {
         if(keyCode.getName().equals("E")){
             if(!submarineOpened) openSubmarine();
         }
+    }
+    public void setDirection(int i){
+        direction = i;
     }
     private void commenceMove(int direction){
         //System.out.println("perform commenceMove, direction: " + direction);
@@ -267,11 +271,18 @@ public class LocationDisplayController implements Initializable {
         submarineOpened = opened;
     }
                 //synchronized close
-    private void setCloseFunction(SubmarineDisplayController sdc){
+    public void setCloseFunction(SubmarineDisplayController sdc){
         Stage currentStage = (Stage) locGrid.getScene().getWindow();
         //setting on close event
         currentStage.setOnCloseRequest(event -> {
             sdc.close();
+        });
+    }
+    public void setCloseFunction(RoomDisplayController rdc){
+        Stage currentStage = (Stage) locGrid.getScene().getWindow();
+        //setting on close event
+        currentStage.setOnCloseRequest(event -> {
+            rdc.close();
         });
     }
         //initialize imageviews
