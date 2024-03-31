@@ -244,6 +244,10 @@ public class LocationDisplayController implements Initializable {
         
         return open;
     }
+            //turn system
+    private void commenceTurn(){
+        
+    }
             //submarine
     public void openSubmarine(){
         try{
