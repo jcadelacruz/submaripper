@@ -103,6 +103,9 @@ public class SubmarineDisplayController implements Initializable {
     }
     private void commenceMove(int direction){
         System.out.println("perform commenceMove, direction: " + direction);
+        //reset key pressed
+        setKeyPressed("");
+        //perform move
         if(checkOpenSpace(direction)){
             //System.out.println(" distance from edge:" + checkDistanceFromEdge(direction));
             movePlayerPos(direction);
@@ -134,6 +137,7 @@ public class SubmarineDisplayController implements Initializable {
             keyCount = 0;
             setKeyPressed("not");
             System.out.println("KeyCOunt: " + keyCount);
+            openLockInstructions.setText("");
         }
     }
     private void attemptOpenRoom(Room r){

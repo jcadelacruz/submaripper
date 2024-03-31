@@ -152,7 +152,7 @@
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
             <ProgressIndicator fx:id="openLockProgress" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="128.0" prefWidth="100.0" progress="0.0" />
-            <Text fx:id="openLockInstructions" strokeType="OUTSIDE" strokeWidth="0.0">
+            <Text fx:id="openLockInstructions" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="175.0">
                <font>
                   <Font size="14.0" />
                </font>

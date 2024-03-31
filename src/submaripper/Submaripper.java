@@ -37,20 +37,28 @@ public class Submaripper extends Application {
         Lock placeholder = new Lock("", -1);
             
             //rooms
-        Room r1 = new Room("Navigation", "nav.png", "Navigation", 4, 3, false, tapBTwice);
-        Room r2 = new Room("Weapons", "weapons.png", "Weapons", 6, 3, false, alternateJKTwice);
+        Room r1 = new Room("Navigation", "nav.png", "Navigation", 3, 5, false, tapBTwice);
+        Room r2 = new Room("Weapons", "weapons.png", "Weapons", 4, 3, false, alternateJKTwice);
         Room r3 = new Room("Health Station", "hs.png", "HealthStation", 4, 7, false, tapBOnce);
+        Room r4 = new Room("Store", "store.png", "Store", 6, 3, false, tapBThrice);
+        Room r5 = new Room("Repair Station", "repair.png", "RepairStation", 6, 7, false, tapBThrice);
             
+            //products
+        Product p1 = new Product("Health Kits", "healthKits.png", 2, arr(0,0,0,0,0,0,0,1), "Adds One Health Kit to your count; one Health Kit restores your whole health in one turn, instead of waiting for your health to regen.");
+        Product p2 = new Product("Bombs", "bombs.png", 3, arr(0,0,0,0,0,1,0,0), "Adds One Bomb to your count; one bomb deals 5 damage across a 3x3 area. Takes one turn to land.");
+        Product p3 = new Product("Missile", "missile.png", 3, arr(0,0,0,0,0,0,1,0), "Adds One Missile to your count; one missile deals 5*base damage and travels in one of the 8 directions. Has a speed of 5 squares per turn.");
+        Product p4 = new Product("Damage", "damage.png", 20, arr(0,0,1,0,0,0,0,0), "Adds One to your base damage.");
+        
         //user
             //spatial
-        Spatial user = new Spatial("Submarine", "submarine.png", 10, 1, 1, 1, false, 5, 2, 2);
+        Spatial user = new Spatial("Submarine", "submarine.png", 10, 1, 1, 1, false, 5, 5, 5, 5, 2, 2);
         Spatial.setUser(user);
             //room
         Room player = new Room("Player", "player.png", " ", 5, 5, false, placeholder);
         Room.setUser(player);
             //user's submarine (set of rooms)
         ArrayList<Room> submarine = new ArrayList<>();
-        Collections.addAll(submarine, r1, r2, r3, r(4,4), r(4,5), r(6,4), r(6,5), r(5,5), r(4,6));
+        Collections.addAll(submarine, r1, r2, r3, r4, r(4,4), r(4,5), r(6,4), r(6,5), r(5,5), r(4,6));
         Room.setSubmarine(submarine);
             
         //open menu
@@ -68,6 +76,10 @@ public class Submaripper extends Application {
     public Room r(int x, int y){//make permeable floor in rooms
         Room floor = new Room(x, y);
         return floor;
+    }
+    public int[] arr(int a, int b, int c, int d, int e, int f, int g, int h){
+        int[] array = {a,b,c,d,e,f,g,h};
+        return array;
     }
     public static FXMLLoader openFXML(String name, Event e, Class className) throws IOException{
         FXMLLoader loader = null;

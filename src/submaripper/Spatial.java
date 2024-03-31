@@ -1,13 +1,9 @@
 package submaripper;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public class Spatial{
     private String name, imgFileName;
-    private int hp, maxHP, atk, speed, regenRate, money, x, y;
+    private int hp, maxHP, atk, speed, regenRate, money, x, y, bombCount, missileCount, healthKitCount;
     private boolean isPermeable;
-    private ArrayList<Item> inventory;
     private static Spatial user;
     
     public Spatial(int x, int y){
@@ -16,9 +12,8 @@ public class Spatial{
         this.x = x;
         this.y = y;
         isPermeable = false;
-        inventory = new ArrayList<>();
     }
-    public Spatial(String n, String ifn, int h, int a, int s, int r, boolean p, int m, int x, int y){
+    public Spatial(String n, String ifn, int h, int a, int s, int r, boolean p, int m, int bc, int mc, int hkc, int x, int y){
         name = n;
         imgFileName = ifn;
         hp = h;
@@ -26,11 +21,13 @@ public class Spatial{
         atk = a;
         speed = s;
         regenRate = r;
+        isPermeable = p;
         money = m;
+        bombCount = bc;
+        missileCount = mc;
+        healthKitCount = hkc;
         this.x = x;
         this.y = y;
-        isPermeable = p;
-        inventory = new ArrayList<>();
     }
 
     //getters
@@ -63,11 +60,21 @@ public class Spatial{
     
     //setters
         //stats
+    public void addStat(int a, int b, int c, int d, int e, int f){
+        addMaxHP(b);
+        addHP(a);
+        atk = addUntilZero(atk, c);
+        speed = addUntilZero(speed, d);
+        regenRate = addUntilZero(regenRate, e);
+        money = addUntilZero(money, f);
+    }
     public void addStat(int[] i){
         addMaxHP(i[1]);
         addHP(i[0]);
         atk = addUntilZero(atk, i[2]);
-        money = addUntilZero(money, i[3]);
+        speed = addUntilZero(speed, i[3]);
+        regenRate = addUntilZero(regenRate, i[4]);
+        money = addUntilZero(money, i[5]);
     }
     public void addHP(int h){
         int health = hp + h;
@@ -99,11 +106,17 @@ public class Spatial{
     public static void setUser(Spatial u){
         user = u;
     }
-        //items
-    public void addItem(Item i){
-        inventory.add(i);
+        //item counts
+    public void addItem(int bomb, int missile, int hk){
+        bombCount = addUntilZero(bombCount, bomb);
+        missileCount = addUntilZero(missileCount, missile);
+        healthKitCount = addUntilZero(healthKitCount, hk);
     }
-    public void addItem(Item... list){
-        this.inventory.addAll(Arrays.asList(list));
+    
+    //methods
+    public void buyProduct(Product p){
+        int e[] = p.getEffects();
+        this.addStat(e[0], e[1], e[2], e[3], e[4], -p.getPrice());
+        this.addItem(e[5], e[6], e[7]);
     }
 }
