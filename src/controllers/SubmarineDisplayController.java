@@ -105,6 +105,7 @@ public class SubmarineDisplayController implements Initializable {
         System.out.println("perform commenceMove, direction: " + direction);
         //reset key pressed
         setKeyPressed("");
+        keyCount=0;
         //perform move
         if(checkOpenSpace(direction)){
             //System.out.println(" distance from edge:" + checkDistanceFromEdge(direction));
