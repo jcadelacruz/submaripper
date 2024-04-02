@@ -1,7 +1,7 @@
 package submaripper;
 
 public class Spatial{
-    private String name, imgFileName;
+    private String name, imgFileName, aggression;
     private int hp, maxHP, atk, speed, regenRate, money, x, y, bombCount, missileCount, healthKitCount;
     private boolean isPermeable;
     private static Spatial user;
@@ -13,7 +13,7 @@ public class Spatial{
         this.y = y;
         isPermeable = false;
     }
-    public Spatial(String n, String ifn, int h, int a, int s, int r, boolean p, int m, int bc, int mc, int hkc, int x, int y){
+    public Spatial(String n, String ifn, int h, int a, int s, int r, boolean p, int m, int bc, int mc, int hkc, String agro, int x, int y){
         name = n;
         imgFileName = ifn;
         hp = h;
@@ -26,6 +26,7 @@ public class Spatial{
         bombCount = bc;
         missileCount = mc;
         healthKitCount = hkc;
+        aggression = agro;
         this.x = x;
         this.y = y;
     }
@@ -59,6 +60,7 @@ public class Spatial{
     public int getRegenRate(){
         return regenRate;
     }
+        //items
     public int getMoney(){
         return money;
     }
@@ -70,6 +72,10 @@ public class Spatial{
     }
     public int getHealthKitCount(){
         return healthKitCount;
+    }
+        //agro
+    public String getAggression(){
+        return aggression;
     }
         //static
     public static Spatial getUser(){
@@ -136,5 +142,13 @@ public class Spatial{
         int e[] = p.getEffects();
         this.addStat(e[0], e[1], e[2], e[3], e[4], -p.getPrice());
         this.addItem(e[5], e[6], e[7]);
+    }
+    public boolean attackAndGetIsDead(Spatial victim){
+        victim.addHP(this.getAtk());
+        boolean victimIsDead = false;
+        if(victim.getHP()==0){
+            victimIsDead = true;
+        }
+        return victimIsDead;
     }
 }

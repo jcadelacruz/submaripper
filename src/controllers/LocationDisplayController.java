@@ -8,6 +8,7 @@ import controllers.rooms.RoomDisplayController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -42,11 +43,10 @@ public class LocationDisplayController implements Initializable {
     @FXML private VBox optionsVBox;
     @FXML private GridPane locGrid;
     private Location currLoc;
-    private int ROW=5, COL=5, startX, startY, direction = 0;
+    private int ROW=5, COL=5, startX, startY, direction = 0, turn = 0;
     private ArrayList<ArrayList<ImageView>> imageViews;
     private Spatial user;
     private boolean submarineOpened;
-    private boolean[] allowMoveButtons = new boolean[4];//in order: north, east, south, west
 
     //options tab
     @FXML private void displayOptions(ActionEvent event) {
@@ -79,6 +79,7 @@ public class LocationDisplayController implements Initializable {
     public void setLocation(Location l){
         nameText.setText(l.getName());
         currLoc = l;
+        Location.setCurrentLocation(l);
     }
         //display
     public void updateScreen(){
@@ -113,6 +114,7 @@ public class LocationDisplayController implements Initializable {
         System.out.println("Key pressed: " + keyCode);
         if(keyCode.equals(KeyCode.ENTER)){
             attemptPlayerMove(direction);
+            commenceTurn();
         }
         if(keyCode.getName().equals("E")){
             if(!submarineOpened) openSubmarine();
@@ -175,12 +177,6 @@ public class LocationDisplayController implements Initializable {
         //System.out.println("  " + distance);
         return distance;
     }
-    /*private void checkMoveButtonLimits(){
-        for(int i = 0; i<4; i++){
-            if(checkDistanceFromEdge(i)<=0) allowMoveButtons[i] = false;
-            else allowMoveButtons[i] = true;
-        }
-    }*/
     private void moveSpatialPos(Spatial s, int direction){
         //System.out.println("perform moveSpatialPos");
         if(direction>3){
@@ -246,9 +242,74 @@ public class LocationDisplayController implements Initializable {
     }
             //turn system
     private void commenceTurn(){
+        Location l = this.currLoc;
+        Spatial u = Spatial.getUser();
         
+        for(Spatial s : l.getContents()){
+            if(s==u || s.getName().equals("rock")){}
+            else{
+                int speed = s.getSpeed();
+                if(speed<u.getSpeed()){//speed is slower
+                    if(turn%u.getSpeed()==0){
+                        commenceSpatialTurn(s);
+                    }
+                }
+                else{//speed is equal to or faster
+                    for(int i = 0; i<(speed/u.getSpeed()); i++){
+                        commenceSpatialTurn(s);
+                    }
+                }
+            }
+        }
     }
-            //submarine
+    private void commenceSpatialTurn(Spatial s){
+        int agro = -1;
+        String ag = s.getAggression();
+        //determining agro
+        if(ag.equals("RANDOM")) agro = 0;
+        if(ag.equals("CHASE")) agro = 2;
+        //movement
+        switch(agro){//s.getAggression()){
+            case 0://random move, no atk
+                double d = Math.random() * 4;
+                int dir = (int) d;
+                if(checkOpenSpace(s, dir)) moveSpatialPos(s, dir);
+                break;
+            default:
+                System.out.println("aggression not found");
+        }
+        //attack
+        boolean userIsDead = false;
+        switch(agro){
+            case 2:
+                if(isPlayerNearby(s)) userIsDead = s.attackAndGetIsDead(Spatial.getUser());
+                break;
+            default:
+        }
+        if(userIsDead) spatialDeath(Spatial.getUser());
+    }
+    private void spatialDeath(Spatial s){
+        ArrayList<Spatial> contents = Location.getCurrentLocation().getContents();
+        contents.remove(s);
+        if(s==Spatial.getUser()){
+            //death stuff if player
+        }
+    }
+    private boolean isPlayerNearby(Spatial s){
+        boolean nearby = false;
+        Spatial u = Spatial.getUser();
+        int[] uPos = u.getPosition(), sPos = s.getPosition();
+        
+        if( ((sPos[0]==(uPos[0]-1)) || (sPos[0]==(uPos[0]+1))) && (uPos[1]==sPos[1]) ){
+            nearby = true;
+        }
+        if( ((sPos[1]==(uPos[1]-1)) || (sPos[1]==(uPos[1]+1))) && (uPos[0]==sPos[0]) ){
+            nearby = true;
+        }
+        return nearby;
+    }
+    
+    //submarine
     public void openSubmarine(){
         try{
             //close active rooms
@@ -276,7 +337,7 @@ public class LocationDisplayController implements Initializable {
     public void setSubmarineOpened(boolean opened){
         submarineOpened = opened;
     }
-                //synchronized close
+        //synchronized close
     public void setCloseFunction(SubmarineDisplayController sdc){
         Stage currentStage = (Stage) locGrid.getScene().getWindow();
         //setting on close event
@@ -290,6 +351,24 @@ public class LocationDisplayController implements Initializable {
         currentStage.setOnCloseRequest(event -> {
             rdc.close();
         });
+    }
+    
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        //System.out.println("initialize location display controller");
+        //initialize
+        startX = 0;
+        startY = 0;
+        COL = 5;
+        ROW = 5;
+        setImageViews();
+        setLocation(Location.getLocationList().get(0));
+        user = Spatial.getUser();
+        currLoc.add(user);
+        submarineOpened = false;
+        //set display 
+        updateScreen();
+        setInstructions();
     }
         //initialize imageviews
     private void setImageViews(){
@@ -339,30 +418,10 @@ public class LocationDisplayController implements Initializable {
         //System.out.println(result);
         return result;
     }
-    
     //instructions
     public void setInstructions(){
-        String s = "WASD to move\nE to open submarine";
+        String s = "ENTER to move\nE to open submarine";
         instructions.setText(s);
         instructions.setFont(Font.font("Arial", 16));
     }
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        //System.out.println("initialize location display controller");
-        //initialize
-        startX = 0;
-        startY = 0;
-        COL = 5;
-        ROW = 5;
-        setImageViews();
-        setLocation(Location.getLocationList().get(0));
-        user = Spatial.getUser();
-        currLoc.add(user);
-        submarineOpened = false;
-        //set display 
-        updateScreen();
-        //checkMoveButtonLimits();
-        setInstructions();
-    }    
-    
 }

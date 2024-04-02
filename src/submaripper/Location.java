@@ -7,6 +7,7 @@ public class Location {
     private ArrayList<Spatial> contents;
     private String name, imgFileName;
     private static ArrayList<Location> locationList = new ArrayList<>();
+    private static Location currLoc;
     
     public Location(String n, String ifn){
         name = n;
@@ -71,12 +72,19 @@ public class Location {
     public static ArrayList<Location> getLocationList(){
         return locationList;
     }
+    public static Location getCurrentLocation(){
+        return currLoc;
+    }
     //setters
     public void add(Spatial s){
         contents.add(s);
     }
     public void add(Spatial... list) {
         this.contents.addAll(Arrays.asList(list));
+    }
+        //static
+    public static void setCurrentLocation(Location l){
+        currLoc = l;
     }
 
 }
