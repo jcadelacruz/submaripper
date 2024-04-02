@@ -112,7 +112,7 @@ public class LocationDisplayController implements Initializable {
         KeyCode keyCode = e.getCode();
         System.out.println("Key pressed: " + keyCode);
         if(keyCode.equals(KeyCode.ENTER)){
-            if(allowMoveButtons[direction]) commenceMove(direction);
+            attemptPlayerMove(direction);
         }
         if(keyCode.getName().equals("E")){
             if(!submarineOpened) openSubmarine();
@@ -121,34 +121,34 @@ public class LocationDisplayController implements Initializable {
     public void setDirection(int i){
         direction = i;
     }
-    private void commenceMove(int direction){
+    private void attemptPlayerMove(int direction){
         //System.out.println("perform commenceMove, direction: " + direction);
-        if(checkOpenSpace(direction)){
+        Spatial u = Spatial.getUser();
+        if(checkOpenSpace(u, direction)){
             //System.out.println(" distance from edge:" + checkDistanceFromEdge(direction));
-            int key = checkDistanceFromEdge(direction);
-            if(checkDistanceFromEdge(direction+2)<2) key = 1;
+            int key = checkSpatialDistanceFromEdge(u, direction);
+            if(checkSpatialDistanceFromEdge(u, direction+2)<2) key = 1;
             switch(key){//distance before movement
                 case 0://at edge
                     //should be impossible
                     break;
                 case 1://one away from edge
-                    movePlayerPos(direction);
+                    moveSpatialPos(u, direction);
                     break;
                 case 2://at far position, but moves into edges
-                    movePlayerPos(direction);
+                    moveSpatialPos(u, direction);
                     break;
                 default://at far position, three away from edge or more
-                    movePlayerPos(direction);
+                    moveSpatialPos(u, direction);
                     moveStartPos(direction);
             }
         }
         else{
             //not open space
         }
-        checkMoveButtonLimits();
         updateScreen();
     }
-    private int checkDistanceFromEdge(int direction){
+    private int checkSpatialDistanceFromEdge(Spatial u, int direction){
         //System.out.print("perform checkDistanceFromEdge: ");
         if(direction>3){
             int subtract = (direction)/4;
@@ -158,16 +158,16 @@ public class LocationDisplayController implements Initializable {
         int distance = 0;
         switch(direction){
             case 0://north
-                distance = user.getPosition()[1];//+ startY
+                distance = u.getPosition()[1];//+ startY
                 break;
             case 1://east
-                distance = currLoc.getSize()[0] - (user.getPosition()[0]);// + startX);
+                distance = currLoc.getSize()[0] - (u.getPosition()[0]);// + startX);
                 break;
             case 2://south
-                distance = currLoc.getSize()[1] - (user.getPosition()[1]);// + startY);
+                distance = currLoc.getSize()[1] - (u.getPosition()[1]);// + startY);
                 break;
             case 3://west
-                distance = user.getPosition()[0];//startX + 
+                distance = u.getPosition()[0];//startX + 
                 break;
             default:
                 //System.out.println("Direction not found");
@@ -175,38 +175,38 @@ public class LocationDisplayController implements Initializable {
         //System.out.println("  " + distance);
         return distance;
     }
-    private void checkMoveButtonLimits(){
+    /*private void checkMoveButtonLimits(){
         for(int i = 0; i<4; i++){
             if(checkDistanceFromEdge(i)<=0) allowMoveButtons[i] = false;
             else allowMoveButtons[i] = true;
         }
-    }
-    private void movePlayerPos(int direction){
-        //System.out.println("perform movePlayerPos");
+    }*/
+    private void moveSpatialPos(Spatial s, int direction){
+        //System.out.println("perform moveSpatialPos");
         if(direction>3){
             int subtract = (direction)/4;
             direction -= subtract*4;
         }
-        int[] pos = user.getPosition();
-        /*System.out.println(" user pos before: " + user.getPosition()[0] + ", " + user.getPosition()[1]);
+        int[] pos = s.getPosition();
+        /*System.out.println(" s pos before: " + s.getPosition()[0] + ", " + s.getPosition()[1]);
         System.out.println(" pos before: " + pos[0] + ", " + pos[1]);
         System.out.println(" direction: " + direction);*/
         switch(direction){
             case 0:
-                user.setY(pos[1]-1);
+                s.setY(pos[1]-1);
                 break;
             case 1:
-                user.setX(pos[0]+1);
+                s.setX(pos[0]+1);
                 break;
             case 2:
                 //System.out.println("" + pos[0] + " and " + pos[1]);
-                user.setPos(pos[0], pos[1]+1); 
+                s.setPos(pos[0], pos[1]+1); 
                 break;
             case 3:
-                user.setX(pos[0]-1);
+                s.setX(pos[0]-1);
                 break;
         }
-        //System.out.println(" user pos after: " + user.getPosition()[0] + ", " + user.getPosition()[1]);
+        //System.out.println(" s pos after: " + s.getPosition()[0] + ", " + s.getPosition()[1]);
     }
     private void moveStartPos(int direction){
         //System.out.println("perform moveStartPos");
@@ -226,21 +226,21 @@ public class LocationDisplayController implements Initializable {
         }
         //System.out.println(" start pos: " + startX + ", " + startY);
     }
-    private boolean checkOpenSpace(int direction){
+    private boolean checkOpenSpace(Spatial r, int direction){
         boolean open = true;
         Location l = currLoc;
         
-        if(checkDistanceFromEdge(direction)<=0) return false;
+        if(checkSpatialDistanceFromEdge(r, direction)<=0) return false;
         
-        movePlayerPos(direction);
+        moveSpatialPos(r, direction);
         for(Spatial s : l.getContents()){
-            if( (s.getPosition()[0] == user.getPosition()[0]) && (s.getPosition()[1] == user.getPosition()[1]) && (s!=user)){
+            if( (s.getPosition()[0] == r.getPosition()[0]) && (s.getPosition()[1] == r.getPosition()[1]) && (s!=r)){
                 if(!s.getIsPermeable()){
                     open = false;
                 }
             }
         }
-        movePlayerPos(direction+2);
+        moveSpatialPos(r, direction+2);
         
         return open;
     }
@@ -361,7 +361,7 @@ public class LocationDisplayController implements Initializable {
         submarineOpened = false;
         //set display 
         updateScreen();
-        checkMoveButtonLimits();
+        //checkMoveButtonLimits();
         setInstructions();
     }    
     
