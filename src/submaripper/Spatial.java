@@ -47,11 +47,29 @@ public class Spatial{
     public int getHP(){
         return hp;
     }
+    public int getMaxHP(){
+        return maxHP;
+    }
     public int getAtk(){
         return atk;
     }
+    public int getSpeed(){
+        return speed;
+    }
+    public int getRegenRate(){
+        return regenRate;
+    }
     public int getMoney(){
         return money;
+    }
+    public int getBombCount(){
+        return bombCount;
+    }
+    public int getMissileCount(){
+        return missileCount;
+    }
+    public int getHealthKitCount(){
+        return healthKitCount;
     }
         //static
     public static Spatial getUser(){
