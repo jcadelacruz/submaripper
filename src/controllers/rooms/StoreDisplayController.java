@@ -16,7 +16,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import submaripper.*;
+import submaripper.Product;
+import submaripper.Spatial;
 
 /**
  * FXML Controller class
@@ -119,7 +120,6 @@ public class StoreDisplayController extends RoomDisplayController implements Ini
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        addToActiveRooms(this);
         initializeImageViewsAndTexts();
         updateScreen();
     }    

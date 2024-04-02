@@ -1,9 +1,8 @@
 package controllers.rooms;
 
-import controllers.*;
+import controllers.LocationDisplayController;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -40,6 +39,7 @@ public class NavigationDisplayController extends RoomDisplayController implement
         
     }
     //location display controller interactions
+    @Override
     public void setCloseFunction(){
         Stage currentStage = (Stage) northBtn.getScene().getWindow();
         //setting on close event
@@ -55,6 +55,7 @@ public class NavigationDisplayController extends RoomDisplayController implement
             if(e.getCode()==KeyCode.ENTER)ldc.moveShip(e);
         });
     }
+    @Override
     public void close(){
         Stage currentStage = (Stage) northBtn.getScene().getWindow();
         currentStage.hide();
@@ -62,7 +63,6 @@ public class NavigationDisplayController extends RoomDisplayController implement
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        addToActiveRooms(this);
         buttonList.add(northBtn);
         buttonList.add(westBtn);
         buttonList.add(southBtn);

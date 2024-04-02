@@ -43,7 +43,7 @@
                   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Regeneration Rate" textAlignment="CENTER" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="t" textAlignment="CENTER" />
+                        <Text fx:id="regenRateText" strokeType="OUTSIDE" strokeWidth="0.0" text="t" textAlignment="CENTER" />
                      </children>
                   </VBox>
                </children>

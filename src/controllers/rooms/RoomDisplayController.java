@@ -26,6 +26,9 @@ public abstract class RoomDisplayController {
     //LocationDisplayController interactions
     public abstract void setCloseFunction();
     public abstract void close();
+    public void update(){
+        
+    }
     public void setSubmarineAndLocationDisplayControllers(SubmarineDisplayController a, LocationDisplayController l) {
         sdc = a;
         ldc = l;

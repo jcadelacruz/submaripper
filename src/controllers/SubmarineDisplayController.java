@@ -4,7 +4,7 @@
  */
 package controllers;
 
-import controllers.rooms.*;
+import controllers.rooms.RoomDisplayController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -23,8 +23,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import submaripper.*;
-
+import submaripper.Lock;
+import submaripper.Room;
+import submaripper.Submaripper;
 /**
  * FXML Controller class
  *
@@ -186,6 +187,7 @@ public class SubmarineDisplayController implements Initializable {
             ldc.setSubmarineOpened(false);
             RoomDisplayController rdc = loader.getController();
             ldc.setCloseFunction(rdc);
+            RoomDisplayController.addToActiveRooms(rdc);
             rdc.setSubmarineAndLocationDisplayControllers(this, ldc);
         }
         catch(IOException e){

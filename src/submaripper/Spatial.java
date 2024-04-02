@@ -2,9 +2,10 @@ package submaripper;
 
 public class Spatial{
     private String name, imgFileName, aggression;
-    private int hp, maxHP, atk, speed, regenRate, money, x, y, bombCount, missileCount, healthKitCount;
+    private int hp, maxHP, atk, speed, regenRate, money, x, y, bombCount, missileCount, healthKitCount, turnsSinceAttacked=0;
     private boolean isPermeable;
     private static Spatial user;
+    private static int REGENDELAY=5;
     
     public Spatial(int x, int y){
         name = "rock";
@@ -143,12 +144,21 @@ public class Spatial{
         this.addStat(e[0], e[1], e[2], e[3], e[4], -p.getPrice());
         this.addItem(e[5], e[6], e[7]);
     }
+    public void turnUpdate(){
+        turnsSinceAttacked++;
+        regenerate();
+    }
     public boolean attackAndGetIsDead(Spatial victim){
-        victim.addHP(this.getAtk());
+        victim.addHP(-this.getAtk());
+        //turnsSinceAttacked
+        victim.turnsSinceAttacked = 0;
         boolean victimIsDead = false;
         if(victim.getHP()==0){
             victimIsDead = true;
         }
         return victimIsDead;
+    }
+    public void regenerate(){
+        if(turnsSinceAttacked>REGENDELAY) this.addHP(this.regenRate);
     }
 }

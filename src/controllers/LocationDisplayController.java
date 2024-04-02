@@ -119,6 +119,7 @@ public class LocationDisplayController implements Initializable {
         if(keyCode.getName().equals("E")){
             if(!submarineOpened) openSubmarine();
         }
+        RoomDisplayController.getActiveRooms().get(0).update();
     }
     public void setDirection(int i){
         direction = i;
@@ -148,7 +149,7 @@ public class LocationDisplayController implements Initializable {
         else{
             //not open space
         }
-        updateScreen();
+        //updateScreen();
     }
     private int checkSpatialDistanceFromEdge(Spatial u, int direction){
         //System.out.print("perform checkDistanceFromEdge: ");
@@ -241,7 +242,7 @@ public class LocationDisplayController implements Initializable {
         return open;
     }
             //turn system
-    private void commenceTurn(){
+    public void commenceTurn(){
         Location l = this.currLoc;
         Spatial u = Spatial.getUser();
         
@@ -261,6 +262,10 @@ public class LocationDisplayController implements Initializable {
                 }
             }
         }
+        u.turnUpdate();
+        
+        //display
+        updateScreen();
     }
     private void commenceSpatialTurn(Spatial s){
         int agro = -1;
@@ -268,6 +273,8 @@ public class LocationDisplayController implements Initializable {
         //determining agro
         if(ag.equals("RANDOM")) agro = 0;
         if(ag.equals("CHASE")) agro = 2;
+        //turn update (regen, 
+        s.turnUpdate();
         //movement
         switch(agro){//s.getAggression()){
             case 0://random move, no atk
@@ -280,6 +287,7 @@ public class LocationDisplayController implements Initializable {
         }
         //attack
         boolean userIsDead = false;
+        if(isPlayerNearby(s)) userIsDead = s.attackAndGetIsDead(Spatial.getUser());
         switch(agro){
             case 2:
                 if(isPlayerNearby(s)) userIsDead = s.attackAndGetIsDead(Spatial.getUser());
