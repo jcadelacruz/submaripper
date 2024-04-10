@@ -91,6 +91,9 @@ public class SubmarineDisplayController implements Initializable {
             case "A":
                 commenceMove(3);
                 break;
+            case "E":
+                ldc.setSubmarineOpened(false);
+                close();
             default:
                 setKeyPressed(keyCode.getName());
                 checkNearbyRooms();
@@ -179,12 +182,13 @@ public class SubmarineDisplayController implements Initializable {
         double progress = (double) k/a;
         openLockProgress.setProgress(progress);
     }
-    private void openRoom(Room r){
+    public void openRoom(Room r){
         System.out.println("perform openRoom");
         try{
             roomOpened = true;
             FXMLLoader loader = Submaripper.openFXML("rooms/"+r.getFXMLFileName(), subGrid, this.getClass());
             ldc.setSubmarineOpened(false);
+            ldc.setLatestRoom(r);
             RoomDisplayController rdc = loader.getController();
             ldc.setCloseFunction(rdc);
             RoomDisplayController.addToActiveRooms(rdc);

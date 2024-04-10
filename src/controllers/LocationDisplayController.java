@@ -8,7 +8,6 @@ import controllers.rooms.RoomDisplayController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -47,6 +46,8 @@ public class LocationDisplayController implements Initializable {
     private ArrayList<ArrayList<ImageView>> imageViews;
     private Spatial user;
     private boolean submarineOpened;
+    private SubmarineDisplayController sdc;
+    private Room latestRoom;
 
     //options tab
     @FXML private void displayOptions(ActionEvent event) {
@@ -118,6 +119,12 @@ public class LocationDisplayController implements Initializable {
         }
         if(keyCode.getName().equals("E")){
             if(!submarineOpened) openSubmarine();
+        }
+        if(keyCode.getName().equals("F")){
+            if(latestRoom!=null){
+                openSubmarine();
+                sdc.openRoom(latestRoom);
+            }
         }
         RoomDisplayController.getActiveRooms().get(0).update();
     }
@@ -318,6 +325,10 @@ public class LocationDisplayController implements Initializable {
     }
     
     //submarine
+        //room
+    public void setLatestRoom(Room r){
+        latestRoom = r;
+    }
     public void openSubmarine(){
         try{
             //close active rooms
@@ -331,7 +342,7 @@ public class LocationDisplayController implements Initializable {
             newStage.setScene(scene);
             newStage.show();
             //set submarine display controller functions
-            SubmarineDisplayController sdc = loader.getController();
+            sdc = loader.getController();
             sdc.setLocationDisplayController(this);
                 //set synchro closed
             setCloseFunction(sdc);
@@ -346,11 +357,11 @@ public class LocationDisplayController implements Initializable {
         submarineOpened = opened;
     }
         //synchronized close
-    public void setCloseFunction(SubmarineDisplayController sdc){
+    public void setCloseFunction(SubmarineDisplayController s){
         Stage currentStage = (Stage) locGrid.getScene().getWindow();
         //setting on close event
         currentStage.setOnCloseRequest(event -> {
-            sdc.close();
+            s.close();
         });
     }
     public void setCloseFunction(RoomDisplayController rdc){
@@ -428,7 +439,7 @@ public class LocationDisplayController implements Initializable {
     }
     //instructions
     public void setInstructions(){
-        String s = "ENTER to move\nE to open submarine";
+        String s = "ENTER to move\nE to open submarine\nF to open latest room";
         instructions.setText(s);
         instructions.setFont(Font.font("Arial", 16));
     }
