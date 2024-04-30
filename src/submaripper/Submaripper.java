@@ -27,7 +27,7 @@ public class Submaripper extends Application {
             //location
         Location l1 = new Location("Shallow Waters", "shallowWaters.png");
             Spatial l1s1 = new Spatial("Small Fish", "smallFish.png", 2, 1, 1, 0, false, 0, 0, 0, 5, "RANDOM", 4, 3);
-            Spatial l1s2 = new Spatial("Small Fish", "smallFish.png", 2, 1, 1, 0, false, 0, 0, 0, 5, "RANDOM", 5, 4);
+            Spatial l1s2 = new Spatial("Small Fish", "smallFish.png", 2, 1, 1, 0, false, 0, 0, 0, 5, "CHASE", 5, 4);
             l1.add(s(0,0), s(0,1), s(0,2), s(1,1), s(0,3), s(0, 4), s(1, 3), s(1, 4), s(2, 4), s(4,4), s(7,0), s(0,5), l1s1, l1s2);//rocks
         
             //locks
@@ -52,7 +52,7 @@ public class Submaripper extends Application {
         
         //user
             //spatial
-        Spatial user = new Spatial("Submarine", "submarine.png", 10, 1, 1, 1, false, 5, 5, 5, 5, "RANDOM", 2, 2);
+        Spatial user = new Spatial("Submarine", "submarine.png", 10, 1, 2, 1, false, 5, 5, 5, 5, "RANDOM", 2, 2);
         Spatial.setUser(user);
             //room
         Room player = new Room("Player", "player.png", " ", 5, 5, false, placeholder);

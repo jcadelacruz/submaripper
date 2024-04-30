@@ -45,7 +45,7 @@ public class LocationDisplayController implements Initializable {
     private int ROW=5, COL=5, startX, startY, direction = 0, turn = 0;
     private ArrayList<ArrayList<ImageView>> imageViews;
     private Spatial user;
-    private boolean submarineOpened;
+    private boolean submarineOpened, paused = false;
     private SubmarineDisplayController sdc;
     private Room latestRoom;
 
@@ -54,6 +54,7 @@ public class LocationDisplayController implements Initializable {
         //toggle options button function
         optionsBtn.setOnAction(e -> {
             optionsVBox.getChildren().clear();
+            togglePause();
             optionsBtn.setOnAction(eve -> {
                 displayOptions(eve);
             });
@@ -70,6 +71,11 @@ public class LocationDisplayController implements Initializable {
             }
         });
         optionsVBox.getChildren().add(exitBtn);
+        
+        togglePause();
+    }
+    private void togglePause(){
+        paused = !paused;
     }
     private void hideOptions(){
         optionsBtn.setDisable(false);
@@ -115,7 +121,6 @@ public class LocationDisplayController implements Initializable {
         System.out.println("Key pressed: " + keyCode);
         if(keyCode.equals(KeyCode.ENTER)){
             attemptPlayerMove(direction);
-            commenceTurn();
         }
         if(keyCode.getName().equals("E")){
             if(!submarineOpened) openSubmarine();
@@ -248,7 +253,26 @@ public class LocationDisplayController implements Initializable {
         
         return open;
     }
+    public void attemptMove(Spatial s, int dir){
+        if(checkOpenSpace(s, dir)) moveSpatialPos(s, dir);
+    }
+    private int findDirectionPointingTo(Spatial chaser, Spatial object){
+        return findDirectionPointingTo(chaser.getPosition(), object.getPosition());
+    }
+    private int findDirectionPointingTo(int[] cpos, int[] opos){
+        int dir = 0;//north=0,east=1, etc. 
+        
+        if(opos[0]<cpos[0]) dir = 3;
+        else if(opos[0]>cpos[0]) dir = 1;
+        if(opos[1]<cpos[1]) dir = 0;
+        else if(opos[1]>cpos[1]) dir = 2;
+        
+        return dir;//prioritizes y axis over x axis
+    }
             //turn system
+    public void update(){
+        if(!paused) commenceTurn();
+    }
     public void commenceTurn(){
         Location l = this.currLoc;
         Spatial u = Spatial.getUser();
@@ -270,30 +294,46 @@ public class LocationDisplayController implements Initializable {
             }
         }
         u.turnUpdate();
+        turnUpdate();
         
         //display
         updateScreen();
     }
-    private void commenceSpatialTurn(Spatial s){
+    private void turnUpdate(){
+        turn++;
+    }
+    private void commenceSpatialTurn(Spatial s){//BEHAVIORS
+        /*Movable j = s;
+        s = checkIfEntity(s);
+        if(s==null) s=j;*/
+        
         int agro = -1;
         String ag = s.getAggression();
         //determining agro
         if(ag.equals("RANDOM")) agro = 0;
         if(ag.equals("CHASE")) agro = 2;
-        //turn update (regen, 
-        s.turnUpdate();
         //movement
+        int dir = 0;
         switch(agro){//s.getAggression()){
             case 0://random move, no atk
                 double d = Math.random() * 4;
-                int dir = (int) d;
-                if(checkOpenSpace(s, dir)) moveSpatialPos(s, dir);
+                dir = (int) d;
+                attemptMove(s, dir);
+                break;
+            case 2:
+                dir = findDirectionPointingTo(s, user);
+                attemptMove(s, dir);
+                break;
+            case 3://chase pathfinding with guaranteed success
+                //INCOMPLETE
+                dir = 0;
+                attemptMove(s, dir);
                 break;
             default:
-                System.out.println("aggression not found");
+                //System.out.println("aggression not found");
         }
         //attack
-        boolean userIsDead = false;
+        /*boolean userIsDead = false;
         if(isPlayerNearby(s)) userIsDead = s.attackAndGetIsDead(Spatial.getUser());
         switch(agro){
             case 2:
@@ -301,7 +341,7 @@ public class LocationDisplayController implements Initializable {
                 break;
             default:
         }
-        if(userIsDead) spatialDeath(Spatial.getUser());
+        if(userIsDead) spatialDeath(Spatial.getUser());*/
     }
     private void spatialDeath(Spatial s){
         ArrayList<Spatial> contents = Location.getCurrentLocation().getContents();
